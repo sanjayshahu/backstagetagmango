@@ -1,3 +1,102 @@
-[00:00:06.355] Server  WARN     ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
-[00:00:07.157] Server  LOG      ✓ Ready in 6.5s
-[00:14:31.283] Server  LOG      ✓ Compiled in 91ms
+[00:00:00.548] Server  WARN     ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+[00:00:00.627] Server  LOG      ✓ Ready in 440ms
+[00:00:02.387] Server  ERROR    ⨯ ./tsconfig.json
+An issue occurred while parsing a tsconfig.json file.
+extends: "../tsconfig.base.json" doesn't resolve correctly
+
+
+[00:00:02.982] Browser ERROR   uncaughtError: Error: ./tsconfig.json
+An issue occurred while parsing a tsconfig.json file.
+extends: "../tsconfig.base.json" doesn't resolve correctly
+
+
+[00:00:03.132] Browser ERROR   ./tsconfig.json
+An issue occurred while parsing a tsconfig.json file.
+extends: "../tsconfig.base.json" doesn't resolve correctly
+[00:00:03.132] Browser ERROR   ./tsconfig.json
+An issue occurred while parsing a tsconfig.json file.
+extends: "../tsconfig.base.json" doesn't resolve correctly
+[00:00:03.132] Browser ERROR   ./tsconfig.json
+An issue occurred while parsing a tsconfig.json file.
+extends: "../tsconfig.base.json" doesn't resolve correctly
+[00:00:03.132] Browser ERROR   ./tsconfig.json
+An issue occurred while parsing a tsconfig.json file.
+extends: "../tsconfig.base.json" doesn't resolve correctly
+[00:00:03.132] Browser ERROR   ./tsconfig.json
+An issue occurred while parsing a tsconfig.json file.
+extends: "../tsconfig.base.json" doesn't resolve correctly
+[00:00:03.132] Browser ERROR   ./tsconfig.json
+An issue occurred while parsing a tsconfig.json file.
+extends: "../tsconfig.base.json" doesn't resolve correctly
+[00:00:38.004] Server  LOG      ✓ Compiled in 210ms
+[00:00:38.154] Browser ERROR   ./tsconfig.json
+An issue occurred while parsing a tsconfig.json file.
+extends: "../tsconfig.base.json" doesn't resolve correctly
+[00:00:41.286] Browser ERROR   ./tsconfig.json
+An issue occurred while parsing a tsconfig.json file.
+extends: "../tsconfig.base.json" doesn't resolve correctly
+[00:00:41.287] Browser ERROR   ./tsconfig.json
+An issue occurred while parsing a tsconfig.json file.
+extends: "../tsconfig.base.json" doesn't resolve correctly
+[00:00:44.110] Browser ERROR   ./tsconfig.json
+An issue occurred while parsing a tsconfig.json file.
+extends: "../tsconfig.base.json" doesn't resolve correctly
+[00:00:44.313] Browser ERROR   ./tsconfig.json
+An issue occurred while parsing a tsconfig.json file.
+extends: "../tsconfig.base.json" doesn't resolve correctly
+[00:00:44.695] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:44.867] Browser ERROR   ./tsconfig.json
+An issue occurred while parsing a tsconfig.json file.
+extends: "../tsconfig.base.json" doesn't resolve correctly
+[00:00:44.867] Browser ERROR   ./tsconfig.json
+An issue occurred while parsing a tsconfig.json file.
+extends: "../tsconfig.base.json" doesn't resolve correctly
+[00:00:44.867] Browser ERROR   ./tsconfig.json
+An issue occurred while parsing a tsconfig.json file.
+extends: "../tsconfig.base.json" doesn't resolve correctly
+[00:00:45.024] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/tech-inno..." notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <script>
+                      <script>
+                      <script>
+                      <script>
+                      <script>
+                      <script>
+                      <script>
+                      <script>
+                      <RootLayout>
+                        <html lang="en" suppressHydrationWarning={true}>
+                          <head>
+                          <body
+                            className="be_vietnam_pro_75b81d32-module__NK5-Mq__variable font-sans antialiased bg-backg..."
+-                           style={{overflow-x:"hidden",overflow-y:"hidden"}}
+                          >
+                  ...
+
+[00:00:45.412] Browser WARN    Image with src "/_next/static/media/logo.cabc8675.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading

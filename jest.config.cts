@@ -5,13 +5,9 @@ const createJestConfig = nextJest({
 });
 
 const config = {
-  displayName: '@backstage-pass-superrepo/web',
-  preset: '../../jest.preset.js',
-  transform: {
-    '^(?!.*\\.(js|jsx|ts|tsx|css|json)$)': '@nx/react/plugins/jest',
-  },
+  displayName: 'web',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../coverage/apps/web',
+  coverageDirectory: './coverage',
   testEnvironment: 'jsdom',
 };
 

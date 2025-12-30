@@ -1,6 +1,62 @@
 {
-  "app": {},
-  "appUsingSizeAdjust": false,
+  "app": {
+    "[project]/src/app/[slug]/(main)/backstage/page": [
+      "static/media/5691580a0d2e7846-s.p.4db024fc.woff2",
+      "static/media/55605e321d2313ca-s.p.a5442acc.woff2",
+      "static/media/9d978ba009f47915-s.p.cb5dc5cb.woff2",
+      "static/media/3c285486269019b7-s.p.f6eddd95.woff2",
+      "static/media/a4f4f75ad654963f-s.p.bab09490.woff2",
+      "static/media/8f46d218c8f79e34-s.p.12435988.woff2",
+      "static/media/6f42e0a3b0519c4d-s.p.7183773d.woff2",
+      "static/media/3eca85881bcfa204-s.p.70aaf131.woff2",
+      "static/media/00ea0ef410d3b1a3-s.p.1491abd8.woff2"
+    ],
+    "[project]/src/app/[slug]/(main)/page": [
+      "static/media/5691580a0d2e7846-s.p.4db024fc.woff2",
+      "static/media/55605e321d2313ca-s.p.a5442acc.woff2",
+      "static/media/9d978ba009f47915-s.p.cb5dc5cb.woff2",
+      "static/media/3c285486269019b7-s.p.f6eddd95.woff2",
+      "static/media/a4f4f75ad654963f-s.p.bab09490.woff2",
+      "static/media/8f46d218c8f79e34-s.p.12435988.woff2",
+      "static/media/6f42e0a3b0519c4d-s.p.7183773d.woff2",
+      "static/media/3eca85881bcfa204-s.p.70aaf131.woff2",
+      "static/media/00ea0ef410d3b1a3-s.p.1491abd8.woff2"
+    ],
+    "[project]/src/app/[slug]/(main)/passes/page": [
+      "static/media/5691580a0d2e7846-s.p.4db024fc.woff2",
+      "static/media/55605e321d2313ca-s.p.a5442acc.woff2",
+      "static/media/9d978ba009f47915-s.p.cb5dc5cb.woff2",
+      "static/media/3c285486269019b7-s.p.f6eddd95.woff2",
+      "static/media/a4f4f75ad654963f-s.p.bab09490.woff2",
+      "static/media/8f46d218c8f79e34-s.p.12435988.woff2",
+      "static/media/6f42e0a3b0519c4d-s.p.7183773d.woff2",
+      "static/media/3eca85881bcfa204-s.p.70aaf131.woff2",
+      "static/media/00ea0ef410d3b1a3-s.p.1491abd8.woff2"
+    ],
+    "[project]/src/app/_not-found/page": [
+      "static/media/5691580a0d2e7846-s.p.4db024fc.woff2",
+      "static/media/55605e321d2313ca-s.p.a5442acc.woff2",
+      "static/media/9d978ba009f47915-s.p.cb5dc5cb.woff2",
+      "static/media/3c285486269019b7-s.p.f6eddd95.woff2",
+      "static/media/a4f4f75ad654963f-s.p.bab09490.woff2",
+      "static/media/8f46d218c8f79e34-s.p.12435988.woff2",
+      "static/media/6f42e0a3b0519c4d-s.p.7183773d.woff2",
+      "static/media/3eca85881bcfa204-s.p.70aaf131.woff2",
+      "static/media/00ea0ef410d3b1a3-s.p.1491abd8.woff2"
+    ],
+    "[project]/src/app/page": [
+      "static/media/5691580a0d2e7846-s.p.4db024fc.woff2",
+      "static/media/55605e321d2313ca-s.p.a5442acc.woff2",
+      "static/media/9d978ba009f47915-s.p.cb5dc5cb.woff2",
+      "static/media/3c285486269019b7-s.p.f6eddd95.woff2",
+      "static/media/a4f4f75ad654963f-s.p.bab09490.woff2",
+      "static/media/8f46d218c8f79e34-s.p.12435988.woff2",
+      "static/media/6f42e0a3b0519c4d-s.p.7183773d.woff2",
+      "static/media/3eca85881bcfa204-s.p.70aaf131.woff2",
+      "static/media/00ea0ef410d3b1a3-s.p.1491abd8.woff2"
+    ]
+  },
+  "appUsingSizeAdjust": true,
   "pages": {},
   "pagesUsingSizeAdjust": false
 }
