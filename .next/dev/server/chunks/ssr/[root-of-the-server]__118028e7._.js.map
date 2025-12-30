@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 18, "column": 0}, "map": {"version":3,"sources":["file:///Users/rhnmht30/Dev/backstage-pass-superrepo/apps/web/src/app/%5Bslug%5D/page.tsx"],"sourcesContent":["import { redirect } from 'next/navigation';\n\nexport default async function StagePage({\n  params,\n}: {\n  params: Promise<{ slug: string }>;\n}) {\n  const { slug } = await params;\n  redirect(`/${slug}/backstage`);\n}\n"],"names":[],"mappings":";;;;AAAA;AAAA;;AAEe,eAAe,UAAU,EACtC,MAAM,EAGP;IACC,MAAM,EAAE,IAAI,EAAE,GAAG,MAAM;IACvB,IAAA,iMAAQ,EAAC,CAAC,CAAC,EAAE,KAAK,UAAU,CAAC;AAC/B"}}]
+}
