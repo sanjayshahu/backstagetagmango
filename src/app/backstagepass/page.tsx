@@ -19,21 +19,36 @@ export default function Page() {
     { id: '3', name: 'Ground Pass', isGroundPass: true },
   ];
 
-  // Conditional Tailwind classes for dark mode
-  const themeClasses = darkMode ? 'bg-black text-white' : 'bg-white text-black';
+  const themeClasses = darkMode
+    ? 'bg-black text-white'
+    : 'bg-white text-black';
 
   return (
-    <div className={`${themeClasses} min-h-screen transition-colors duration-300`}>
-      <GradientBorderCard/>
+    <div
+      className={`
+        ${themeClasses}
+        min-h-screen
+        transition-colors duration-300
+      `}
+    >
+      <GradientBorderCard />
+
       <PageWrapper
         title="Subscriber Feed"
         description="Exclusive posts for subscribers"
         sidebar={<Sidebar darkMode={darkMode} />}
-        darkMode={darkMode} // pass dark mode to PageWrapper
+        darkMode={darkMode}
       >
-        <div className="space-y-6">
-          {/* <PostCard {...mockPostCard} darkMode={darkMode} /> */}
-
+        {/* MAIN CONTENT WRAPPER */}
+        <div
+          className="
+            mx-auto
+            w-full
+            max-w-3xl
+            px-4 sm:px-6 lg:px-0
+            space-y-6
+          "
+        >
           <PostCard
             {...mockPostCard}
             postId="post-2"
@@ -44,16 +59,43 @@ export default function Page() {
           />
         </div>
 
-        <div className="p-6 space-x-4">
+        {/* ACTION BUTTONS */}
+        <div
+          className="
+            mt-8
+            px-4 sm:px-6
+            flex
+            flex-col
+            gap-4
+            sm:flex-row
+            sm:items-center
+          "
+        >
           <button
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg"
+            className="
+              w-full sm:w-auto
+              px-4 py-2
+              bg-blue-600
+              text-white
+              rounded-lg
+              transition
+              hover:bg-blue-700
+            "
             onClick={() => setDrawerOpen(true)}
           >
             Open Pass Drawer
           </button>
 
           <button
-            className="px-4 py-2 bg-gray-800 text-white rounded-lg"
+            className="
+              w-full sm:w-auto
+              px-4 py-2
+              bg-gray-800
+              text-white
+              rounded-lg
+              transition
+              hover:bg-gray-700
+            "
             onClick={() => setDarkMode(!darkMode)}
           >
             Toggle Dark Mode
@@ -63,10 +105,10 @@ export default function Page() {
         <PassDrawer
           availablePasses={passes}
           selectedPassIds={selectedPasses}
-          onSelectionChange={(ids) => setSelectedPasses(ids)}
+          onSelectionChange={setSelectedPasses}
           open={drawerOpen}
           onOpenChange={setDrawerOpen}
-          darkMode={darkMode} // pass dark mode to drawer
+          darkMode={darkMode}
         />
       </PageWrapper>
     </div>

@@ -2,10 +2,14 @@
 import React from 'react';
 import { StageAccessProvider } from '@/lib/stage-access-context';
 
-export default function BackstagePassLayout({ children }: { children: React.ReactNode }) {
+export default function BackstagePassLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <StageAccessProvider slug="backstagepass">
-      <div className="min-h-screen bg-neutral-50 p-6">
+      <div className="min-h-screen bg-neutral-50">
         {children}
       </div>
     </StageAccessProvider>
