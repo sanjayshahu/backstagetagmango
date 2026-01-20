@@ -27,6 +27,7 @@ export interface CommentsSectionProps {
   currentUserAvatar?: string;
   currentUserName?: string;
   className?: string;
+  darkMode?: boolean; // ✅ add darkMode
 }
 
 // ============================================================================
@@ -193,6 +194,7 @@ function CommentsSection({
   currentUserAvatar,
   currentUserName,
   className,
+  darkMode=false
 }: CommentsSectionProps) {
   const {
     data,
