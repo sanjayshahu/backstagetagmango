@@ -91,6 +91,7 @@ export interface PostCardProps {
   passes: PostPassDto[];
   isPinned?: boolean;
   pinnedAt?: string | object | null;
+  darkMode?: boolean;
 }
 
 // ============================================================================
@@ -100,66 +101,46 @@ export interface PostCardProps {
 interface MediaSectionProps {
   media: PostCardMedia[];
   onImageClick?: (imageIndex: number) => void;
+  darkMode?: boolean;
 }
 
-function MediaSection({ media, onImageClick }: MediaSectionProps) {
-  if (!media || media.length === 0) {
-    return null;
-  }
+function MediaSection({ media, onImageClick, darkMode = false }: MediaSectionProps) {
+  if (!media || media.length === 0) return null;
 
-  // Get the index in the images-only array for lightbox navigation
-  const getImageIndex = (mediaIndex: number): number => {
+  const getImageIndex = (mediaIndex: number) => {
     let imageIndex = 0;
     for (let i = 0; i < mediaIndex; i++) {
-      if (media[i].type === 'image') {
-        imageIndex++;
-      }
+      if (media[i].type === 'image') imageIndex++;
     }
     return imageIndex;
   };
 
-  // Single item - no carousel needed
+  const bgClass = darkMode ? 'bg-gray-800' : 'bg-neutral-3';
+
   if (media.length === 1) {
     const item = media[0];
     return (
-      <div className="mt-4 relative overflow-hidden rounded-lg aspect-4/3 bg-neutral-3">
+      <div className={`mt-4 relative overflow-hidden rounded-lg aspect-4/3 ${bgClass}`}>
         {item.type === 'image' ? (
-          <Button
-            variant="ghost"
-            onClick={() => onImageClick?.(0)}
-            requireAuth={false}
-            className="w-full h-full cursor-pointer p-0 rounded-none hover:bg-transparent"
-            aria-label="View image fullscreen"
-          >
-            <Image
-              src={item.url}
-              alt={item.alt || 'Media'}
-              fill
-              className="object-contain"
-              sizes="(max-width: 768px) 100vw, 600px"
-            />
+          <Button variant="ghost" onClick={() => onImageClick?.(0)} requireAuth={false} className="w-full h-full cursor-pointer p-0 rounded-none hover:bg-transparent" aria-label="View image fullscreen">
+            <Image src={item.url} alt={item.alt || 'Media'} fill className="object-contain" sizes="(max-width: 768px) 100vw, 600px" />
           </Button>
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <MuxVideoPlayer
-              transcoderConfig={item.transcoderConfig}
-              fallbackUrl={item.url}
-              ariaLabel={item.alt || 'Video'}
-            />
+            <MuxVideoPlayer transcoderConfig={item.transcoderConfig} fallbackUrl={item.url} ariaLabel={item.alt || 'Video'} />
           </div>
         )}
       </div>
     );
   }
 
-  // Multiple items - use carousel
   return (
     <div className="mt-4">
       <Carousel className="w-full">
         <CarouselContent className="-ml-2">
           {media.map((item, index) => (
             <CarouselItem key={index} className="pl-2">
-              <div className="relative overflow-hidden rounded-lg aspect-4/3 bg-neutral-3">
+              <div className={`relative overflow-hidden rounded-lg aspect-4/3 ${bgClass}`}>
                 {item.type === 'image' ? (
                   <Button
                     variant="ghost"
@@ -168,21 +149,11 @@ function MediaSection({ media, onImageClick }: MediaSectionProps) {
                     className="w-full h-full cursor-pointer p-0 rounded-none hover:bg-transparent"
                     aria-label={`View image ${index + 1} fullscreen`}
                   >
-                    <Image
-                      src={item.url}
-                      alt={item.alt || `Media ${index + 1}`}
-                      fill
-                      className="object-contain"
-                      sizes="(max-width: 768px) 100vw, 600px"
-                    />
+                    <Image src={item.url} alt={item.alt || `Media ${index + 1}`} fill className="object-contain" sizes="(max-width: 768px) 100vw, 600px" />
                   </Button>
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <MuxVideoPlayer
-                      transcoderConfig={item.transcoderConfig}
-                      fallbackUrl={item.url}
-                      ariaLabel={item.alt || `Video ${index + 1}`}
-                    />
+                    <MuxVideoPlayer transcoderConfig={item.transcoderConfig} fallbackUrl={item.url} ariaLabel={item.alt || `Video ${index + 1}`} />
                   </div>
                 )}
               </div>
@@ -199,20 +170,16 @@ function MediaSection({ media, onImageClick }: MediaSectionProps) {
 interface CommentsCountProps {
   count: number;
   onClick?: () => void;
+  darkMode?: boolean;
 }
 
-function CommentsCount({ count, onClick }: CommentsCountProps) {
-  if (count === 0) {
-    return null;
-  }
+function CommentsCount({ count, onClick, darkMode = false }: CommentsCountProps) {
+  if (count === 0) return null;
+
+  const textClass = darkMode ? 'text-gray-200' : 'text-neutral-12';
 
   return (
-    <Button
-      variant="link"
-      onClick={onClick}
-      requireAuth={false}
-      className="text-sm text-neutral-12 hover:no-underline p-0 h-auto"
-    >
+    <Button variant="link" onClick={onClick} requireAuth={false} className={`text-sm hover:no-underline p-0 h-auto ${textClass}`}>
       {toReadableLargeNumber(count)} {count === 1 ? 'Comment' : 'Comments'}
     </Button>
   );
@@ -242,6 +209,7 @@ function PostCard({
   passes,
   isPinned,
   pinnedAt,
+  darkMode = false,
 }: PostCardProps) {
   const [isCommentsOpen, setIsCommentsOpen] = React.useState(showComments);
   const [isReactionListOpen, setIsReactionListOpen] = React.useState(false);
@@ -253,27 +221,19 @@ function PostCard({
   const subscribedPassIdSet = new Set(passes.map(pass => pass.id));
   const filteredPasses = subscribedPasses.filter(pass => subscribedPassIdSet.has(pass.id));
   const isPublicPost = passes.some(pass => pass.isGroundPass);
-  // Filter only images for lightbox
-  const imageMedia = React.useMemo(
-    () => (media || []).filter((m) => m.type === 'image'),
-    [media],
-  );
+  const imageMedia = React.useMemo(() => (media || []).filter(m => m.type === 'image'), [media]);
 
-  // Internal reaction state management
   const addReaction = useAddReaction();
   const { removeReaction } = useRemoveReaction();
 
   const handleCommentClick = React.useCallback(() => {
-    setIsCommentsOpen((prev) => !prev);
+    setIsCommentsOpen(prev => !prev);
     actions?.onCommentClick?.();
   }, [actions]);
 
-  const handleReact = React.useCallback(
-    (emoji: string) => {
-      addReaction.react(postId, emoji, undefined, userReaction);
-    },
-    [addReaction, postId, userReaction],
-  );
+  const handleReact = React.useCallback((emoji: string) => {
+    addReaction.react(postId, emoji, undefined, userReaction);
+  }, [addReaction, postId, userReaction]);
 
   const handleUnreact = React.useCallback(() => {
     removeReaction(postId, userReaction);
@@ -283,8 +243,8 @@ function PostCard({
     setIsReactionListOpen(true);
   }, []);
 
-  const handleImageClick = React.useCallback((imageIndex: number) => {
-    setLightboxIndex(imageIndex);
+  const handleImageClick = React.useCallback((index: number) => {
+    setLightboxIndex(index);
     setIsLightboxOpen(true);
   }, []);
 
@@ -294,14 +254,12 @@ function PostCard({
 
   const totalReactionCount = reactions.reduce((sum, r) => sum + r.count, 0);
 
+  const cardBg = darkMode ? 'bg-gray-900 border-gray-700' : 'bg-white border-neutral-4';
+  const textColor = darkMode ? 'text-gray-200' : 'text-neutral-12';
+
   return (
     <SkeletonProvider loading={skeletonLoading}>
-      <Card
-        className={cn(
-          'flex flex-col rounded-3xl border border-neutral-4 bg-white',
-          className,
-        )}
-      >
+      <Card className={cn('flex flex-col rounded-3xl', cardBg, className)}>
         <CardSection className='flex justify-between p-4'>
           <CardSection className='flex-col'>
             {isPinned && (
@@ -310,56 +268,23 @@ function PostCard({
                   <Tooltip delayDuration={1000}>
                     <TooltipTrigger className="flex items-center gap-1">
                       <PushPinIcon className="size-4 text-neutral-11" />
-                      <Text className="text-xs text-neutral-alpha-11 font-normal">
-                        Pinned
-                      </Text>
+                      <Text className="text-xs text-neutral-alpha-11 font-normal">Pinned</Text>
                     </TooltipTrigger>
-                    <TooltipContent>
-                      Pinned on {toReadableDateTime(pinnedAt as string)}
-                    </TooltipContent>
+                    <TooltipContent>Pinned on {toReadableDateTime(pinnedAt as string)}</TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
               </CardSection>
             )}
-            {/* Profile Header */}
             <CardSection className="flex items-start gap-2">
-              <AvatarComponent
-                src={author.avatarUrl}
-                username={author.name}
-                size="size-12"
-              />
+              <AvatarComponent src={author.avatarUrl} username={author.name} size="size-12" />
               <CardSection className="flex flex-col justify-center gap-1 min-h-12 flex-1">
-                <Text as="h3" className="text-base font-semibold text-neutral-12">
-                  {author.name && author.name.length > 0
-                    ? author.name
-                    : 'Anonymous User'}
-                </Text>
+                <Text as="h3" className={`text-base font-semibold ${textColor}`}>{author.name || 'Anonymous User'}</Text>
                 <div className="flex items-center gap-1">
                   <Tooltip delayDuration={1000}>
                     <TooltipTrigger>
-                      <Text className="text-xs text-neutral-alpha-11 font-normal">
-                        {toRelativeTime(timestamp)}
-                      </Text>
+                      <Text className={`text-xs font-normal ${textColor}`}>{toRelativeTime(timestamp)}</Text>
                     </TooltipTrigger>
                     <TooltipContent>{toReadableDateTime(timestamp)}</TooltipContent>
-                  </Tooltip>
-                  <Text className="text-xs text-neutral-alpha-11 font-normal">
-                    {' • '}
-                  </Text>
-                  <Tooltip delayDuration={1000}>
-                    <TooltipTrigger>
-                      {isPublicPost ? (
-                        <GlobeHemisphereWestIcon weight="fill" className="size-3 text-neutral-alpha-11" />
-
-                      ) : (<Text className="text-xs text-neutral-alpha-11 font-normal">
-                        Posted in {filteredPasses[0]?.name}{' '}
-                        {filteredPasses.length > 1 ? `+${filteredPasses.length - 1}` : ''}
-                      </Text>)}
-
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      {isPublicPost ? 'This post is visible to all followers' : filteredPasses.map((pass: PostPassDto) => pass.name).join(', ')}
-                    </TooltipContent>
                   </Tooltip>
                 </div>
               </CardSection>
@@ -368,91 +293,29 @@ function PostCard({
           <PostCardActionDropdown postId={postId} authorId={authorId} stageId={stageId} isPinned={isPinned} onEdit={() => setIsEditModalOpen(true)} />
         </CardSection>
 
-        {/* Content */}
         <CardSection className="px-4 pb-4">
-          <ExpandableText
-            content={content}
-            maxLines={10}
-            textClassName="text-mauve-12"
-          />
-          {media && media.length > 0 && (
-            <MediaSection media={media} onImageClick={handleImageClick} />
-          )}
+          <ExpandableText content={content} maxLines={10} textClassName={textColor} />
+          {media && media.length > 0 && <MediaSection media={media} onImageClick={handleImageClick} darkMode={darkMode} />}
         </CardSection>
 
-        {/* Activity Bar */}
         <CardSection className="flex flex-row justify-between px-4 py-3">
           <div className="flex items-center gap-1">
-            <ReactionPills
-              reactions={reactions}
-              userReaction={userReaction}
-              totalCount={totalReactionCount}
-              onReact={handleReact}
-              onUnreact={handleUnreact}
-              onOpenReactionList={handleOpenReactionList}
-            />
-            <Button
-              variant="icon"
-              size="icon"
-              onClick={handleCommentClick}
-              aria-label={'View comments'}
-              className="size-8"
-            >
-              <MessageCircle className="size-4 text-neutral-12" />
+            <ReactionPills reactions={reactions} userReaction={userReaction} totalCount={totalReactionCount} onReact={handleReact} onUnreact={handleUnreact} onOpenReactionList={handleOpenReactionList} />
+            <Button variant="icon" size="icon" onClick={handleCommentClick} aria-label="View comments" className="size-8">
+              <MessageCircle className="size-4" />
             </Button>
           </div>
-          <CommentsCount count={commentsCount} onClick={handleCommentClick} />
+          <CommentsCount count={commentsCount} onClick={handleCommentClick} darkMode={darkMode} />
         </CardSection>
 
-        {/* Comments Section */}
-        {isCommentsOpen && (
-          <CommentsSection
-            postId={postId}
-            currentUserAvatar={currentUserAvatar}
-            currentUserName={currentUserName}
-          />
-        )}
+        {isCommentsOpen && <CommentsSection postId={postId} currentUserAvatar={currentUserAvatar} currentUserName={currentUserName} darkMode={darkMode} />}
       </Card>
 
-      <ReactionsDetailsModal
-        postId={postId}
-        open={isReactionListOpen}
-        onOpenChange={setIsReactionListOpen}
-      />
+      <ReactionsDetailsModal postId={postId} open={isReactionListOpen} onOpenChange={setIsReactionListOpen} />
 
-      {/* Media Lightbox */}
-      {imageMedia.length > 0 && (
-        <MediaLightbox
-          isOpen={isLightboxOpen}
-          onClose={handleCloseLightbox}
-          media={imageMedia.map((m) => ({ url: m.url, alt: m.alt }))}
-          initialIndex={lightboxIndex}
-        />
-      )}
+      {imageMedia.length > 0 && <MediaLightbox isOpen={isLightboxOpen} onClose={handleCloseLightbox} media={imageMedia.map(m => ({ url: m.url, alt: m.alt }))} initialIndex={lightboxIndex} />}
 
-      {/* Edit Post Modal */}
-      <CreatePostModal
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-        stageId={stageId}
-        currentUser={{
-          name: author.name,
-          image: author.avatarUrl,
-        }}
-        isEditMode={true}
-        postData={{
-          id: postId,
-          text: content,
-          passes: passes,
-          media: (media || []).map(m => ({
-            id: m.url,
-            type: m.type,
-            url: m.url,
-            thumbnailUrl: null,
-          })),
-        }}
-        onSuccess={() => setIsEditModalOpen(false)}
-      />
+      <CreatePostModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} stageId={stageId} currentUser={{ name: author.name, image: author.avatarUrl }} isEditMode postData={{ id: postId, text: content, passes, media: (media || []).map(m => ({ id: m.url, type: m.type, url: m.url, thumbnailUrl: null })) }} onSuccess={() => setIsEditModalOpen(false)} />
     </SkeletonProvider>
   );
 }

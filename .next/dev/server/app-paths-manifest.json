@@ -1,7 +1,6 @@
 {
   "/[slug]/(main)/backstage/page": "app/[slug]/(main)/backstage/page.js",
   "/[slug]/(main)/page": "app/[slug]/(main)/page.js",
-  "/[slug]/(main)/passes/page": "app/[slug]/(main)/passes/page.js",
   "/_not-found/page": "app/_not-found/page.js",
-  "/page": "app/page.js"
+  "/backstagepass/page": "app/backstagepass/page.js"
 }
