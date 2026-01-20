@@ -98,7 +98,7 @@ const Overlay = ({ darkMode = false, title, description }: OverlayProps): JSX.El
       }`}
     >
       <div
-        className={`relative flex flex-col w-[600px] rounded-3xl overflow-hidden ${
+        className={`relative flex flex-col w-full max-w-[600px] mx-4 sm:mx-auto rounded-3xl overflow-hidden ${
           darkMode ? 'bg-neutral-900 text-white' : 'bg-white'
         }`}
       >
