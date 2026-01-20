@@ -10,6 +10,7 @@ import { useState } from 'react';
 
 export default function Page() {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedPasses, setSelectedPasses] = useState<string[]>([]);
   const [darkMode, setDarkMode] = useState(false);
 
@@ -19,36 +20,52 @@ export default function Page() {
     { id: '3', name: 'Ground Pass', isGroundPass: true },
   ];
 
-  const themeClasses = darkMode
-    ? 'bg-black text-white'
-    : 'bg-white text-black';
+  const themeClasses = darkMode ? 'bg-black text-white' : 'bg-white text-black';
 
   return (
-    <div
-      className={`
-        ${themeClasses}
-        min-h-screen
-        transition-colors duration-300
-      `}
-    >
+    <div className={`min-h-screen transition-colors duration-300 ${themeClasses}`}>
       <GradientBorderCard />
 
+      {/* Mobile Hamburger Button */}
+      <div className="sm:hidden px-4 py-2">
+        <button
+          className="px-3 py-2 bg-gray-800 text-white rounded-lg"
+          onClick={() => setSidebarOpen(true)}
+        >
+          ☰
+        </button>
+      </div>
+
+      {/* PageWrapper now receives sidebar prop only */}
       <PageWrapper
         title="Subscriber Feed"
         description="Exclusive posts for subscribers"
         sidebar={<Sidebar darkMode={darkMode} />}
         darkMode={darkMode}
       >
-        {/* MAIN CONTENT WRAPPER */}
-        <div
-          className="
-            mx-auto
-            w-full
-            max-w-3xl
-            px-4 sm:px-6 lg:px-0
-            space-y-6
-          "
-        >
+        {/* Mobile Sidebar Drawer */}
+        {sidebarOpen && (
+          <div className="fixed inset-0 z-50 flex">
+            {/* Overlay */}
+            <div
+              className="absolute inset-0 bg-black bg-opacity-50"
+              onClick={() => setSidebarOpen(false)}
+            />
+            {/* Sidebar Panel */}
+            <div className="relative w-64 bg-white dark:bg-black p-4 transition-transform duration-300">
+              <Sidebar darkMode={darkMode} />
+              <button
+                className="mt-4 px-4 py-2 bg-gray-200 dark:bg-gray-800 rounded-lg"
+                onClick={() => setSidebarOpen(false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* MAIN CONTENT */}
+        <div className="mx-auto w-full max-w-3xl px-4 sm:px-6 lg:px-0 space-y-6">
           <PostCard
             {...mockPostCard}
             postId="post-2"
@@ -60,48 +77,23 @@ export default function Page() {
         </div>
 
         {/* ACTION BUTTONS */}
-        <div
-          className="
-            mt-8
-            px-4 sm:px-6
-            flex
-            flex-col
-            gap-4
-            sm:flex-row
-            sm:items-center
-          "
-        >
+        <div className="mt-8 px-4 sm:px-6 flex flex-col gap-4 sm:flex-row sm:items-center">
           <button
-            className="
-              w-full sm:w-auto
-              px-4 py-2
-              bg-blue-600
-              text-white
-              rounded-lg
-              transition
-              hover:bg-blue-700
-            "
+            className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg transition hover:bg-blue-700"
             onClick={() => setDrawerOpen(true)}
           >
             Open Pass Drawer
           </button>
 
           <button
-            className="
-              w-full sm:w-auto
-              px-4 py-2
-              bg-gray-800
-              text-white
-              rounded-lg
-              transition
-              hover:bg-gray-700
-            "
+            className="w-full sm:w-auto px-4 py-2 bg-gray-800 text-white rounded-lg transition hover:bg-gray-700"
             onClick={() => setDarkMode(!darkMode)}
           >
             Toggle Dark Mode
           </button>
         </div>
 
+        {/* Pass Drawer */}
         <PassDrawer
           availablePasses={passes}
           selectedPassIds={selectedPasses}
