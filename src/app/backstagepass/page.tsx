@@ -32,40 +32,19 @@ export default function Page() {
           className="px-3 py-2 bg-gray-800 text-white rounded-lg"
           onClick={() => setSidebarOpen(true)}
         >
-          ☰
+          ☰ Menu
         </button>
       </div>
 
-      {/* PageWrapper now receives sidebar prop only */}
+      {/* PageWrapper: sidebar passed as prop */}
       <PageWrapper
         title="Subscriber Feed"
         description="Exclusive posts for subscribers"
         sidebar={<Sidebar darkMode={darkMode} />}
         darkMode={darkMode}
       >
-        {/* Mobile Sidebar Drawer */}
-        {sidebarOpen && (
-          <div className="fixed inset-0 z-50 flex">
-            {/* Overlay */}
-            <div
-              className="absolute inset-0 bg-black bg-opacity-50"
-              onClick={() => setSidebarOpen(false)}
-            />
-            {/* Sidebar Panel */}
-            <div className="relative w-64 bg-white dark:bg-black p-4 transition-transform duration-300">
-              <Sidebar darkMode={darkMode} />
-              <button
-                className="mt-4 px-4 py-2 bg-gray-200 dark:bg-gray-800 rounded-lg"
-                onClick={() => setSidebarOpen(false)}
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        )}
-
         {/* MAIN CONTENT */}
-        <div className="mx-auto w-full max-w-3xl px-4 sm:px-6 lg:px-0 space-y-6">
+        <div className="mx-auto w-full max-w-3xl space-y-6">
           <PostCard
             {...mockPostCard}
             postId="post-2"
@@ -103,6 +82,27 @@ export default function Page() {
           darkMode={darkMode}
         />
       </PageWrapper>
+
+      {/* Mobile Sidebar Drawer */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 z-50 flex">
+          {/* Overlay */}
+          <div
+            className="absolute inset-0 bg-black bg-opacity-50"
+            onClick={() => setSidebarOpen(false)}
+          />
+          {/* Drawer Panel */}
+          <div className="relative w-64 bg-white dark:bg-black p-4 transition-transform duration-300">
+            <Sidebar darkMode={darkMode} />
+            <button
+              className="mt-4 px-4 py-2 bg-gray-200 dark:bg-gray-800 rounded-lg"
+              onClick={() => setSidebarOpen(false)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

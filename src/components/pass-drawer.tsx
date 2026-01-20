@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ChevronLeft, Check } from 'lucide-react';
-import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
-import { Button } from '@/components/ui/button';
+import { ChevronLeft, Check, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import * as React from 'react';
+import { Drawer as DrawerPrimitive } from 'vaul';
+import { Button } from '@/components/ui/button';
 
 export interface Pass {
   id: string;
@@ -22,6 +23,7 @@ export interface PassDrawerProps {
   darkMode?: boolean;
 }
 
+/* ------------------------- Utility for formatting price ------------------------- */
 function formatPrice(pass: Pass): string {
   if (pass.isGroundPass || !pass.price) return 'Free';
   if (pass.price.usdCents) return `$${pass.price.usdCents}`;
@@ -29,6 +31,46 @@ function formatPrice(pass: Pass): string {
   return 'Free';
 }
 
+/* ------------------------- Custom Drawer Components ------------------------- */
+const Drawer = ({
+  shouldScaleBackground = true,
+  ...props
+}: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
+  <DrawerPrimitive.Root shouldScaleBackground={shouldScaleBackground} {...props} />
+);
+Drawer.displayName = 'Drawer';
+
+const DrawerPortal = DrawerPrimitive.Portal;
+
+const DrawerOverlay = React.forwardRef<React.ElementRef<typeof DrawerPrimitive.Overlay>, React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Overlay>>(
+  ({ className, ...props }, ref) => (
+    <DrawerPrimitive.Overlay ref={ref} className={cn('fixed inset-0 z-50 bg-black/50', className)} {...props} />
+  )
+);
+DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName;
+
+const DrawerContent = React.forwardRef<
+  React.ElementRef<typeof DrawerPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & { open?: boolean }
+>(({ className, children, open = false, ...props }, ref) => (
+  <DrawerPortal>
+    <DrawerOverlay />
+    <DrawerPrimitive.Content
+      ref={ref}
+      className={cn(
+        'fixed top-0 right-0 z-50 h-screen w-[600px] flex flex-col border bg-neutral-3 transform transition-transform duration-300 ease-in-out',
+        open ? 'translate-x-0' : 'translate-x-full',
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </DrawerPrimitive.Content>
+  </DrawerPortal>
+));
+DrawerContent.displayName = 'DrawerContent';
+
+/* ------------------------- PassDrawer Component ------------------------- */
 export function PassDrawer({
   open,
   onOpenChange,
@@ -45,7 +87,7 @@ export function PassDrawer({
   }, [open, selectedPassIds]);
 
   const handleTogglePass = (passId: string) => {
-    setLocalSelection(prev => prev.includes(passId) ? prev.filter(id => id !== passId) : [...prev, passId]);
+    setLocalSelection(prev => (prev.includes(passId) ? prev.filter(id => id !== passId) : [...prev, passId]));
   };
 
   const handleSelectAll = () => {
@@ -68,69 +110,52 @@ export function PassDrawer({
 
   return (
     <Drawer open={open} onOpenChange={handleOpenChange}>
-      <DrawerContent
-        className={cn(`h-[90vh] w-[600px] fixed top-0 right-0 transform transition-transform duration-300 ease-in-out ${open ? 'translate-x-0' : 'translate-x-full'}`, bgClass)}
-      >
+      <DrawerContent open={open} className={bgClass}>
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-4">
-          <Button type="button" variant="ghost" size="icon" onClick={handleClose} className="rounded-full hover:bg-gray-400" requireAuth={false}>
-            <ChevronLeft className={`size-6 ${darkMode ? 'text-white' : 'text-gray-900'}`} />
+        <div className="flex items-center justify-between px-4 py-4 border-b">
+          <Button type="button" variant="ghost" size="icon" onClick={handleClose} className="rounded-full hover:bg-gray-400">
+            <ChevronLeft className={cn('size-6', darkMode ? 'text-white' : 'text-gray-900')} />
           </Button>
-          <DrawerTitle className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Passes</DrawerTitle>
+          <h2 className={cn('text-lg font-semibold', darkMode ? 'text-white' : 'text-gray-900')}>Passes</h2>
           {localSelection.length > 0 ? (
-            <Button type="button" variant="ghost" size="icon" onClick={handleClose} className={cn('rounded-full bg-[rgba(32,0,56,0.13)]', hoverClass)} requireAuth={false}>
-              <Check className="size-5" style={{ color: darkMode ? 'white' : 'rgba(33, 31, 38, 1)' }} strokeWidth={2.5} />
+            <Button type="button" variant="ghost" size="icon" onClick={handleClose} className={cn('rounded-full bg-[rgba(32,0,56,0.13)]', hoverClass)}>
+              <Check className="size-5" style={{ color: darkMode ? 'white' : 'rgba(33,31,38,1)' }} strokeWidth={2.5} />
             </Button>
           ) : (
-            <Button type="button" variant="ghost" onClick={handleSelectAll} className={`text-sm font-medium px-2 ${darkMode ? 'text-white hover:text-gray-300' : 'text-gray-900 hover:text-gray-600'}`} requireAuth={false}>
+            <Button type="button" variant="ghost" onClick={handleSelectAll} className={cn('text-sm font-medium px-2', darkMode ? 'text-white hover:text-gray-300' : 'text-gray-900 hover:text-gray-600')}>
               Select All
             </Button>
           )}
         </div>
 
-        {/* Pass list */}
-        <div className="pb-8 overflow-y-auto">
+        {/* Pass List */}
+        <div className="overflow-y-auto flex-1 p-4 space-y-2">
           {passes.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 px-4">
-              <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-500'}`}>No passes available</p>
+            <div className="flex flex-col items-center justify-center py-16">
+              <p className={darkMode ? 'text-gray-300' : 'text-gray-500'}>No passes available</p>
             </div>
           ) : (
-            <div className="space-y-2">
-              {passes.map(pass => {
-                const isSelected = localSelection.includes(pass.id);
-                return (
-                  <Button
-                    key={pass.id}
-                    type="button"
-                    variant="ghost"
-                    onClick={() => handleTogglePass(pass.id)}
-                    className={cn(
-                      'flex items-center w-full h-auto p-3 justify-start rounded-none',
-                      isSelected ? (darkMode ? 'bg-gray-800' : 'bg-[rgba(48,0,64,0.06)]') : hoverClass
-                    )}
-                    requireAuth={false}
-                  >
-                    <div className="size-14 rounded-xl bg-gradient-to-br from-indigo-200 via-indigo-300 to-indigo-400 flex items-center justify-center mr-4 overflow-hidden">
-                      <div className="relative size-8">
-                        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="size-full">
-                          <path d="M16 4L20 12L28 14L22 20L24 28L16 24L8 28L10 20L4 14L12 12L16 4Z" fill="rgba(99, 102, 241, 0.8)" stroke="rgba(79, 70, 229, 1)" strokeWidth="1.5" />
-                          <path d="M16 8L18.5 13L24 14.5L20 18.5L21 24L16 21.5L11 24L12 18.5L8 14.5L13.5 13L16 8Z" fill="rgba(129, 140, 248, 0.6)" />
-                        </svg>
-                      </div>
-                    </div>
-
-                    <div className="flex-1 text-left">
-                      <p className={`${darkMode ? 'text-white' : 'text-gray-900'} font-medium text-base`}>{pass.name}</p>
-                      <p className={`${darkMode ? 'text-gray-300' : 'text-gray-500'} text-sm`}>{formatPrice(pass)}</p>
-                    </div>
-
-                    <div className="size-6 rounded-md flex items-center justify-center transition-colors bg-[rgba(32,0,56,0.13)]">
-                      {isSelected && <Check className="size-4" style={{ color: darkMode ? 'white' : 'rgba(33, 31, 38, 1)' }} strokeWidth={3} />}
-                    </div>
-                  </Button>
-                );
-              })}
-            </div>
+            passes.map(pass => {
+              const isSelected = localSelection.includes(pass.id);
+              return (
+                <Button
+                  key={pass.id}
+                  type="button"
+                  variant="ghost"
+                  onClick={() => handleTogglePass(pass.id)}
+                  className={cn(
+                    'flex items-center w-full h-auto p-3 justify-start rounded-none',
+                    isSelected ? (darkMode ? 'bg-gray-800' : 'bg-[rgba(48,0,64,0.06)]') : hoverClass
+                  )}
+                >
+                  <div className="flex-1 text-left">
+                    <p className={cn('font-medium text-base', darkMode ? 'text-white' : 'text-gray-900')}>{pass.name}</p>
+                    <p className={cn('text-sm', darkMode ? 'text-gray-300' : 'text-gray-500')}>{formatPrice(pass)}</p>
+                  </div>
+                  {isSelected && <Check className="size-5" style={{ color: darkMode ? 'white' : 'rgba(33,31,38,1)' }} strokeWidth={2.5} />}
+                </Button>
+              );
+            })
           )}
         </div>
       </DrawerContent>
